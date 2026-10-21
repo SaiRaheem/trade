@@ -1,0 +1,51 @@
+{
+  "initial_capital": 100.0,
+  "cash_balance": 29.76,
+  "equity": 100.0,
+  "total_trades": 0,
+  "winning_trades": 0,
+  "losing_trades": 0,
+  "total_pnl": 0.0,
+  "open_positions": [
+    {
+      "symbol": "ALTUSDT",
+      "direction": "LONG",
+      "entry_price": 0.01008,
+      "stop_loss": 0.009727,
+      "tp1": 0.011038,
+      "tp2": 0.012298,
+      "units": 2834.46,
+      "allocated_capital": 28.57,
+      "dollar_risk": 1.0,
+      "tp1_hit": false,
+      "opened_at": "2026-10-20 16:30:22 UTC"
+    },
+    {
+      "symbol": "GTCUSDT",
+      "direction": "LONG",
+      "entry_price": 0.31224,
+      "stop_loss": 0.29975,
+      "tp1": 0.34971,
+      "tp2": 0.39030,
+      "units": 80.07,
+      "allocated_capital": 25.00,
+      "dollar_risk": 1.0,
+      "tp1_hit": false,
+      "opened_at": "2026-10-20 16:30:22 UTC"
+    },
+    {
+      "symbol": "PHBUSDT",
+      "direction": "LONG",
+      "entry_price": 0.0150,
+      "stop_loss": 0.0141,
+      "tp1": 0.01875,
+      "tp2": 0.0225,
+      "units": 1111.11,
+      "allocated_capital": 16.67,
+      "dollar_risk": 1.0,
+      "tp1_hit": false,
+      "opened_at": "2026-10-20 16:30:22 UTC"
+    }
+  ],
+  "trade_history": []
+}

@@ -1,0 +1,13 @@
+{
+  "fast_ema": 20,
+  "slow_ema": 50,
+  "rsi_oversold": 30,
+  "rsi_overbought": 70,
+  "risk_per_trade_pct": 1.0,
+  "sl_multiplier": 1.5,
+  "tp1_rr": 2.5,
+  "tp2_rr": 4.5,
+  "training_epoch": 1,
+  "last_trained_at": "2026-10-20 16:30:00 UTC",
+  "optimization_notes": "Initialized with baseline institutional parameters."
+}

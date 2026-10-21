@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Paper Trader &bull; 24/7 AI Terminal</title>
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --bg-card: #131b26;
+      --bg-card-subtle: #1a2332;
+      --border: #222f3e;
+      --fg: #f1f5f9;
+      --fg-muted: #94a3b8;
+      --accent: #3b82f6;
+      --bull: #10b981;
+      --bull-bg: rgba(16, 185, 129, 0.15);
+      --bear: #ef4444;
+      --bear-bg: rgba(239, 68, 68, 0.15);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.15);
+      --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      padding: 20px;
+      line-height: 1.5;
+    }
+    .container { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .badge {
+      background: linear-gradient(135deg, #10b981, #3b82f6);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .card-title { font-size: 12px; color: var(--fg-muted); text-transform: uppercase; font-weight: 600; }
+    .card-val { font-family: var(--font-mono); font-size: 22px; font-weight: 700; }
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    th {
+      color: var(--fg-muted);
+      font-weight: 600;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); font-family: var(--font-mono); }
+    .tag { padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .tag-bull { background: var(--bull-bg); color: var(--bull); }
+    .tag-bear { background: var(--bear-bg); color: var(--bear); }
+    .tag-warn { background: var(--warning-bg); color: var(--warning); }
+    .btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+          <span class="badge">Railway 24/7 Engine</span>
+          <span style="font-size: 12px; color: var(--fg-muted);">Automated Binance Paper Trader</span>
+        </div>
+        <h1 style="font-size: 24px; font-weight: 800;">Autonomous Crypto Trading Terminal</h1>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <span style="font-size: 12px; color: var(--fg-muted);">Auto-refreshes every 30s</span>
+        <button class="btn" onclick="location.reload()">Refresh Now</button>
+      </div>
+    </div>
+
+    <!-- Portfolio KPI Cards -->
+    <div class="stats-grid">
+      <div class="card">
+        <span class="card-title">Total Equity</span>
+        <span class="card-val">${{ "%.2f"|format(ledger.equity) }} USDT</span>
+        <span style="font-size: 12px; color: {% if ledger.equity >= ledger.initial_capital %}var(--bull){% else %}var(--bear){% endif %};">
+          {{ "%+.2f"|format(ledger.equity - ledger.initial_capital) }} USDT ({{ "%+.2f"|format(((ledger.equity - ledger.initial_capital)/ledger.initial_capital)*100) }}%)
+        </span>
+      </div>
+      <div class="card">
+        <span class="card-title">Available Cash</span>
+        <span class="card-val">${{ "%.2f"|format(ledger.cash_balance) }} USDT</span>
+        <span style="font-size: 12px; color: var(--fg-muted);">Allocated in trades: ${{ "%.2f"|format(ledger.equity - ledger.cash_balance) }}</span>
+      </div>
+      <div class="card">
+        <span class="card-title">Win Rate</span>
+        <span class="card-val" style="color: var(--bull);">
+          {% if ledger.total_trades > 0 %}
+            {{ "%.1f"|format((ledger.winning_trades / ledger.total_trades) * 100) }}%
+          {% else %}
+            0.0%
+          {% endif %}
+        </span>
+        <span style="font-size: 12px; color: var(--fg-muted);">{{ ledger.winning_trades }} Wins / {{ ledger.losing_trades }} Losses ({{ ledger.total_trades }} Closed)</span>
+      </div>
+      <div class="card">
+        <span class="card-title">Self-Training Engine</span>
+        <span class="card-val" style="color: var(--accent);">Epoch {{ params.training_epoch }}</span>
+        <span style="font-size: 11.5px; color: var(--fg-muted);">Last: {{ params.last_trained_at }}</span>
+      </div>
+    </div>
+
+    <!-- Active Open Positions -->
+    <div class="table-container">
+      <h2 style="font-size: 16px; margin-bottom: 12px;">Active Open Positions ({{ ledger.open_positions|length }})</h2>
+      {% if ledger.open_positions|length == 0 %}
+        <div style="font-size: 13px; color: var(--fg-muted); padding: 12px 0;">No active positions currently open. The scanner is actively monitoring Binance order books.</div>
+      {% else %}
+        <table>
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Side</th>
+              <th>Entry Price</th>
+              <th>Live Price</th>
+              <th>Stop Loss</th>
+              <th>Take Profit 1</th>
+              <th>Position Size</th>
+              <th>Unrealized PnL</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pos in ledger.open_positions %}
+              {% set curr = prices.get(pos.symbol, pos.entry_price) %}
+              {% if pos.direction == "LONG" %}
+                {% set pnl = (curr - pos.entry_price) * pos.units %}
+              {% else %}
+                {% set pnl = (pos.entry_price - curr) * pos.units %}
+              {% endif %}
+              {% set pnl_pct = (pnl / pos.allocated_capital) * 100 if pos.allocated_capital > 0 else 0 %}
+              <tr>
+                <td><strong>{{ pos.symbol }}</strong></td>
+                <td><span class="tag tag-bull">{{ pos.direction }}</span></td>
+                <td>{{ "%.6f"|format(pos.entry_price) }}</td>
+                <td>{{ "%.6f"|format(curr) }}</td>
+                <td style="color: var(--bear);">{{ "%.6f"|format(pos.stop_loss) }}</td>
+                <td style="color: var(--bull);">{{ "%.6f"|format(pos.tp1) }}</td>
+                <td>${{ "%.2f"|format(pos.allocated_capital) }}</td>
+                <td style="color: {% if pnl >= 0 %}var(--bull){% else %}var(--bear){% endif %}; font-weight: 700;">
+                  {{ "%+.2f"|format(pnl) }} ({{ "%+.2f"|format(pnl_pct) }}%)
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    </div>
+
+    <!-- Closed Trade History -->
+    <div class="table-container">
+      <h2 style="font-size: 16px; margin-bottom: 12px;">Recent Closed Trade History</h2>
+      {% if ledger.trade_history|length == 0 %}
+        <div style="font-size: 13px; color: var(--fg-muted); padding: 12px 0;">No trades closed yet. Trades will automatically log here when Stop Loss or Take Profit is hit.</div>
+      {% else %}
+        <table>
+          <thead>
+            <tr>
+              <th>Closed Timestamp</th>
+              <th>Symbol</th>
+              <th>Direction</th>
+              <th>Exit Trigger</th>
+              <th>Entry</th>
+              <th>Exit</th>
+              <th>Net PnL (USDT)</th>
+              <th>Return %</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in ledger.trade_history|reverse %}
+              <tr>
+                <td>{{ t.closed_at }}</td>
+                <td><strong>{{ t.symbol }}</strong></td>
+                <td><span class="tag tag-bull">{{ t.direction }}</span></td>
+                <td>
+                  <span class="tag {% if t.exit_reason == 'STOP_LOSS' %}tag-bear{% else %}tag-bull{% endif %}">
+                    {{ t.exit_reason }}
+                  </span>
+                </td>
+                <td>{{ "%.6f"|format(t.entry_price) }}</td>
+                <td>{{ "%.6f"|format(t.exit_price) }}</td>
+                <td style="color: {% if t.pnl_usdt >= 0 %}var(--bull){% else %}var(--bear){% endif %}; font-weight: 700;">
+                  {{ "%+.2f"|format(t.pnl_usdt) }}
+                </td>
+                <td style="color: {% if t.pnl_percent >= 0 %}var(--bull){% else %}var(--bear){% endif %}; font-weight: 700;">
+                  {{ "%+.2f"|format(t.pnl_percent) }}%
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    </div>
+
+    <!-- Active Parameters Footer -->
+    <div style="font-size: 12px; color: var(--fg-muted); padding: 10px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+      <span>Active AI Config: Fast EMA: {{ params.fast_ema }} | Slow EMA: {{ params.slow_ema }} | RSI Floor: {{ params.rsi_oversold }} | Risk/Trade: {{ params.risk_per_trade_pct }}%</span>
+      <span>Notes: {{ params.optimization_notes }}</span>
+    </div>
+  </div>
+
+  <script>
+    // Auto-refresh every 30 seconds
+    setTimeout(() => { location.reload(); }, 30000);
+  </script>
+</body>
+</html>
